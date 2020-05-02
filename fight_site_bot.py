@@ -25,12 +25,7 @@ async def on_ready():
 
 @bot.command()
 async def fighter(ctx, *, search_term):
-    search = ''
-    for i in search_term:
-        if i == ' ':
-            search += '+'
-        else:
-            search += i
+    search = search_term.replace(' ', '+')
     url = 'https://www.thefight-site.com/search?q=' + search
     try:
         page = urlopen(url)
@@ -46,7 +41,6 @@ async def fighter(ctx, *, search_term):
         await ctx.channel.send('Sorry something went wrong, try checking your spelling')
     await ctx.channel.send('https://www.thefight-site.com' + new_url)
 
-
 @bot.command(pass_context=True)
 async def help(ctx):
     author = ctx.message.author
@@ -55,6 +49,6 @@ async def help(ctx):
         color = discord.Colour.orange()
     )
     embed.set_author(name='List of commands')
-    embed.add_field(name='!fighter', value='Returns the top fight site article for that fighter', inline=False)
+    embed.add_field(name='!fighter *enter name*', value='Returns the top fight site article for that fighter', inline=False)
     await ctx.channel.send(embed=embed)
 bot.run(TOKEN)
