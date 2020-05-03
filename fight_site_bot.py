@@ -10,7 +10,6 @@ from html.parser import HTMLParser
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from datetime import datetime
-from datetime import datetime
 from pytz import timezone
 import pytz
 
@@ -46,15 +45,22 @@ async def fighter(ctx, *, search_term):
         file.close()
         await ctx.channel.send('Sorry something went wrong, try checking your spelling')
     await ctx.channel.send('https://www.thefight-site.com' + new_url)
+
+@bot.command()
+async def recent(ctx):
+    """ Pulls up the most recent article on thefight-site.com"""
+    page = urlopen('https://www.thefight-site.com')
+    soup = BeautifulSoup(page, 'html.parser')
+    for link in soup.find_all('a'):
+            if str(link.get('href')).startswith('/home/'):
+                await ctx.channel.send('https://www.thefight-site.com' + str(link.get('href')))
+                break
 #on !roast command
 @bot.command()
 async def roast(ctx):
     roasts = [
     'Ed\'s favorite fighter is Jon Jones',
     'Ryan thinks Tony beats Khabib',
-    'ACA is worse than Bellator',
-    'Boxing sucks',
-    'Wonderboy is the best kickboxer in MMA'
     ]
     await ctx.channel.send(random.choice(roasts))
 
@@ -66,6 +72,9 @@ async def help(ctx):
     )
     embed.set_author(name='List of commands')
     embed.add_field(name='!fighter *enter name*', value='Returns the top fight site article for that fighter', inline=False)
+    embed.add_field(name='!recent', value='Returns the most recent article written', inline=False)
+    embed.add_field(name='!currenttime', value='States time around the world', inline=False)
+    embed.add_field(name='!roast', value='Says some dumb stuff', inline=False)
     await ctx.channel.send(embed=embed)
 #on !currenttime command
 @bot.command()
@@ -73,10 +82,14 @@ async def currenttime(ctx):
 
     tz_NY = pytz.timezone('America/New_York')
     datetime_NY = datetime.now(tz_NY)
-    await ctx.channel.send("NY time:" + datetime_NY.strftime("%H:%M:%S"))
+    await ctx.channel.send("New York time: " + datetime_NY.strftime("%H:%M"))
 
     tz_London = pytz.timezone('Europe/London')
     datetime_London = datetime.now(tz_London)
-    await ctx.channel.send("London time:" + datetime_London.strftime("%H:%M:%S"))
+    await ctx.channel.send("London time: " + datetime_London.strftime("%H:%M"))
+
+    tz_Oslo = pytz.timezone('Europe/Oslo')
+    datetime_Oslo = datetime.now(tz_Oslo)
+    await ctx.channel.send("Kristiansund time: " + datetime_Oslo.strftime("%H:%M"))
 
 bot.run(TOKEN)
