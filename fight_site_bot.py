@@ -75,6 +75,7 @@ async def help(ctx):
     embed.add_field(name='!recent', value='Returns the most recent article written', inline=False)
     embed.add_field(name='!currenttime', value='States time around the world', inline=False)
     embed.add_field(name='!roast', value='Says some dumb stuff', inline=False)
+    embed.add_field(name='!huf', value='Sends picture of Dana White', inline=False)
     await ctx.channel.send(embed=embed)
 #on !currenttime command
 @bot.command()
@@ -91,5 +92,8 @@ async def currenttime(ctx):
     tz_Oslo = pytz.timezone('Europe/Oslo')
     datetime_Oslo = datetime.now(tz_Oslo)
     await ctx.channel.send("Kristiansund time: " + datetime_Oslo.strftime("%H:%M"))
+@bot.command()
+async def huf(ctx):
+    await ctx.channel.send(file=discord.File('/root/fightsite_bot/huf.jpg'))
 
 bot.run(TOKEN)
